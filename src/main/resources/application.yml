@@ -1,0 +1,85 @@
+server:
+  port: 9191
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        - id: PROJECT-SERVICE
+          uri: lb://PROJECT-SERVICE
+          predicates:
+            - Path=/api/project/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: PROJECT-SERVICE
+                fallbackuri: forward:/projectServiceFallBack
+
+        - id: EMPLOYEE-SERVICE
+          uri: lb://EMPLOYEE-SERVICE
+          predicates:
+            - Path=/api/employee/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: EMPLOYEE-SERVICE
+                fallbackuri: forward:/employeeServiceFallBack
+
+        - id: ALLOTMENT-SERVICE
+          uri: lb://ALLOTMENT-SERVICE
+          predicates:
+            - Path=/api/allotment/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: ALLOTMENT-SERVICE
+                fallbackuri: forward:/allotmentServiceFallBack
+
+        - id: TIMESHEET-SERVICE
+          uri: lb://TIMESHEET-SERVICE
+          predicates:
+            - Path=/api/timesheet/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: TIMESHEET-SERVICE
+                fallbackuri: forward:/timesheetServiceFallBack
+
+        - id: REPORT-SERVICE
+            uri: lb://REPORT-SERVICE
+            predicates:
+              - Path=/api/report/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  name: REPORT-SERVICE
+                  fallbackuri: forward:/reportServiceFallBack
+
+
+
+
+hystrix:
+  command:
+    fallbackcmd:
+      isolation:
+        thread:
+          timeoutInMilliseconds: 10000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
