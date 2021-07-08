@@ -48,14 +48,14 @@ spring:
                 fallbackuri: forward:/timesheetServiceFallBack
 
         - id: REPORT-SERVICE
-            uri: lb://REPORT-SERVICE
-            predicates:
-              - Path=/api/report/**
-            filters:
-              - name: CircuitBreaker
-                args:
-                  name: REPORT-SERVICE
-                  fallbackuri: forward:/reportServiceFallBack
+          uri: lb://REPORT-SERVICE
+          predicates:
+            - Path=/api/report/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: REPORT-SERVICE
+                fallbackuri: forward:/reportServiceFallBack
 
 
 
